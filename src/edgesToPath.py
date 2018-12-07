@@ -31,12 +31,14 @@ def getPointsFromEdges(edgemap):
 		for j in xrange(len(edgemap[i])):
 			if ((i,j) not in checked) and (edgemap[i][j] == 1):
 				checked  += [(i,j)]
-				res += [(i,j)]
+				#res += [(i,j)]
 				(resTmp, checkedTmp) = dfs(edgemap, checked, i, j)
 				# add default value to say pick up end-effector
 				checked += checkedTmp
 				if (resTmp != []):
-					res.append(resTmp)
+					res.append([(i,j)] + resTmp)
+				else:
+					res.append([(i,j)])
 	return res
 
 def main():
