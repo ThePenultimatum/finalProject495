@@ -8,6 +8,51 @@ import numpy as np
 import pylab as pl
 from matplotlib import collections  as mc
 
+import numpy as np
+import cv2
+from matplotlib import pyplot as plt
+
+img = cv2.imread('lenna.png')
+'''
+edges = cv.Canny(img,100,200)
+plt.subplot(121),plt.imshow(img,cmap = 'gray')
+plt.title('Original Image'), plt.xticks([]), plt.yticks([])
+plt.subplot(122),plt.imshow(edges,cmap = 'gray')
+plt.title('Edge Image'), plt.xticks([]), plt.yticks([])
+plt.show()
+'''
+'''
+i = 331
+limit = 400
+while i < 340:
+    edges = cv.Canny(img, 20, limit)
+    plt.subplot(i),plt.imshow(edges,cmap = 'gray')
+    i = i + 1
+    limit = limit + 50
+'''
+
+# Resize
+h, w = img.shape[:2]
+frame_size = 100
+if h > w:
+    h_new = frame_size
+    w_new = (frame_size * w) / h
+else:
+    w_new = frame_size
+    h_new = (frame_size * h) / w    
+resizes = cv2.resize(img, (h_new, w_new), cv2.INTER_AREA)
+
+# Canny edge
+edges = cv2.Canny(resizes, 200, 400)
+
+traj = []
+r, c = edges.shape
+edges = np.array(edges)
+
+
+
+
+
 def getLinesFromPoints(points):
 	n = len(points)
 	if (n == 0):
@@ -17,12 +62,20 @@ def getLinesFromPoints(points):
 	else:
 		print points
 		lines = []
-		last = points[0]
-		for p in points[1:]:
+		last = None
+		newPoint = True
+		for p in points:
 			print p
-			if -1 not in p:
-				lines.append([last, p])
+			if newPoint:
 				last = p
+				newPoint = False
+			else:
+				if -1 not in p:
+					lines.append([last, p])
+					last = p
+				else:
+					newPoint = True
+			
 		return lines
 
 def plotResults(results):
