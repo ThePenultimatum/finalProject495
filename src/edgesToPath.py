@@ -2,6 +2,41 @@
 import copy
 import modern_robotics
 import rospy
+import numpy as np
+import matplotlib.pyplot as plt
+import numpy as np
+import pylab as pl
+from matplotlib import collections  as mc
+
+def getLinesFromPoints(points):
+	n = len(points)
+	if (n == 0):
+		return []
+	elif (n == 1):
+		return (points[0], points[0])
+	else:
+		print points
+		lines = []
+		last = points[0]
+		for p in points[1:]:
+			print p
+			if -1 not in p:
+				lines.append([last, p])
+				last = p
+		return lines
+
+def plotResults(results):
+	lc = mc.LineCollection(getLinesFromPoints(results), linewidths=2)
+	fig, ax = pl.subplots()
+	ax.add_collection(lc)
+	ax.autoscale()
+	ax.margins(0.1)
+	fig.show()
+	# lines = getLinesFromPoints(results)
+	# for i in range(0, len(results)):
+	# 	((x1,y1),(x2,y2)) = results[i]
+	# 	plt.plot([x1,x2], [y1,y2], 'ro-')
+	# plt.show()
 
 def isAdjacent(l1, l2):
 	(x1, y1) = l1
