@@ -141,7 +141,7 @@ def dfs(mapvals, checked, i, j):
 	#print "dfs ", i, j
 	resTmp = []
 	checkedTmp = copy.deepcopy(checked)
-	if (i-1 >= 0) and (mapvals[i-1][j] == 1) and ((i-1,j) not in checkedTmp):
+	if (i-1 >= 0) and (mapvals[i-1][j] > 0) and ((i-1,j) not in checkedTmp):
 		#if resTmp != []:
 			#print (i,j), (i-1,j)
 		resTmp.append((i-1,j))
@@ -151,7 +151,7 @@ def dfs(mapvals, checked, i, j):
 		if (innerRes != [] and innerChecked != []):
 			#resTmp += [(i,j)] + innerRes
 			resTmp += innerRes
-	if ((i-1 >= 0) and (j-1 >= 0)) and (mapvals[i-1][j-1] == 1) and ((i-1,j-1) not in checkedTmp):
+	if ((i-1 >= 0) and (j-1 >= 0)) and (mapvals[i-1][j-1] > 0) and ((i-1,j-1) not in checkedTmp):
 		#if resTmp != []:
 			#print (i,j), (i-1,j-1)
 		resTmp.append((i-1,j-1))
@@ -161,7 +161,7 @@ def dfs(mapvals, checked, i, j):
 		if (innerRes != [] and innerChecked != []):
 			#resTmp += [(i,j)] + innerRes
 			resTmp += innerRes
-	if (j-1 >= 0) and (mapvals[i][j-1] == 1) and ((i, j-1) not in checkedTmp):
+	if (j-1 >= 0) and (mapvals[i][j-1] > 0) and ((i, j-1) not in checkedTmp):
 		#if resTmp != []:
 			#print (i,j), (i,j-1)
 		resTmp.append((i,j-1))
@@ -171,7 +171,7 @@ def dfs(mapvals, checked, i, j):
 		if (innerRes != [] and innerChecked != []):	
 			#resTmp += [(i,j)] + innerRes
 			resTmp += innerRes	
-	if (i+1 < len(mapvals)) and (mapvals[i+1][j] == 1) and ((i+1,j) not in checkedTmp):
+	if (i+1 < len(mapvals)) and (mapvals[i+1][j] > 0) and ((i+1,j) not in checkedTmp):
 		#if resTmp != []:
 			#print (i,j), (i+1,j)
 		resTmp.append((i+1,j))
@@ -181,7 +181,7 @@ def dfs(mapvals, checked, i, j):
 		if (innerRes != [] and innerChecked != []):
 			#resTmp += [(i,j)] + innerRes
 			resTmp += innerRes
-	if ((i+1 < len(mapvals)) and (j+1 < len(mapvals[0]))) and (mapvals[i+1][j+1] == 1) and ((i+1,j+1) not in checkedTmp):
+	if ((i+1 < len(mapvals)) and (j+1 < len(mapvals[0]))) and (mapvals[i+1][j+1] > 0) and ((i+1,j+1) not in checkedTmp):
 		#if resTmp != []:
 			#print (i,j), (i+1,j+1)
 		resTmp.append((i+1,j+1))
@@ -191,7 +191,7 @@ def dfs(mapvals, checked, i, j):
 		if (innerRes != [] and innerChecked != []):
 			#resTmp += [(i,j)] + innerRes
 			resTmp += innerRes
-	if (j+1 < len(mapvals[0])) and (mapvals[i][j+1] == 1) and ((i, j+1) not in checkedTmp):
+	if (j+1 < len(mapvals[0])) and (mapvals[i][j+1] > 0) and ((i, j+1) not in checkedTmp):
 		#if resTmp != []:
 			#print (i,j), (i,j+1)
 		resTmp.append((i,j+1))
@@ -201,7 +201,7 @@ def dfs(mapvals, checked, i, j):
 		if (innerRes != [] and innerChecked != []):	
 			#resTmp += [(i,j)] + innerRes
 			resTmp += innerRes
-	if ((i-1 >= 0) and (j+1 < len(mapvals[0]))) and (mapvals[i-1][j+1] == 1) and ((i-1,j+1) not in checkedTmp):
+	if ((i-1 >= 0) and (j+1 < len(mapvals[0]))) and (mapvals[i-1][j+1] > 0) and ((i-1,j+1) not in checkedTmp):
 		#if resTmp != []:
 			#print (i,j), (i-1,j+1)
 		resTmp.append((i-1,j+1))
@@ -211,7 +211,7 @@ def dfs(mapvals, checked, i, j):
 		if (innerRes != [] and innerChecked != []):
 			#resTmp += [(i,j)] + innerRes
 			resTmp += innerRes
-	if ((i+1 < len(mapvals)) and (j-1 >= 0)) and (mapvals[i+1][j-1] == 1) and ((i+1,j-1) not in checkedTmp):
+	if ((i+1 < len(mapvals)) and (j-1 >= 0)) and (mapvals[i+1][j-1] > 0) and ((i+1,j-1) not in checkedTmp):
 		#if resTmp != []:
 			#print (i,j), (i+1,j-1)
 		resTmp.append((i+1,j-1))
@@ -232,7 +232,7 @@ def getPointsFromEdges(edgemap):
 	res = []
 	for i in xrange(len(edgemap)):
 		for j in xrange(len(edgemap[i])):
-			if ((i,j) not in checked) and (edgemap[i][j] == 1):
+			if ((i,j) not in checked) and (edgemap[i][j] > 0):
 				checked.add((i,j))
 				#res += [(i,j)]
 				(resTmp, checkedTmp) = dfs(edgemap, checked, i, j)
@@ -244,7 +244,8 @@ def getPointsFromEdges(edgemap):
 					res.append([(i,j)])
 			else:
 				checked.add((i,j))
-	return reduce(lambda a,b: a + [(-1,-1)] + b, filter(lambda x: x!=[], map(lambda tree: separateBranches(tree),res)))
+	#return reduce(lambda a,b: a + [(-1,-1)] + b, filter(lambda x: x!=[], map(lambda tree: separateBranches(tree),res)))
+	return filter(lambda x: x!=[], map(lambda tree: separateBranches(tree),res))
 
 def main():
         return 1
