@@ -29,6 +29,7 @@ import actionlib
 import modern_robotics as mr
 import numpy as np
 
+from geometry_msgs.msg import Point
 from control_msgs.msg import (
     FollowJointTrajectoryAction,
     FollowJointTrajectoryGoal,
@@ -37,10 +38,10 @@ from trajectory_msgs.msg import (
     JointTrajectoryPoint,
 )
 
+
 import intera_interface
 
 from intera_interface import CHECK_VERSION
-
 
 class Trajectory(object):
     def __init__(self, limb, joint_names):
@@ -61,21 +62,26 @@ class Trajectory(object):
             rospy.signal_shutdown("Timed out waiting for Action Server")
             sys.exit(1)
         self.clear(limb)
+       
+        self.duration = 0.0
+        self.if_target = False
+        self.target = Point()
 
-    def add_point(self, positions, time):
+    def add_point(self, positions, dt):
+        self.duration += dt
         point = JointTrajectoryPoint()
         point.positions = copy(positions)
-        point.time_from_start = rospy.Duration(time)
+        point.time_from_start = rospy.Duration(self.duration)
         
         # Here we add velocities and accelerations 
         # v
         if len(self._goal.trajectory.points) > 1:
-            point.velocities = 1.0 * (positions - self._goal.trajectory.points[-1].positions) / time
+            point.velocities = 1.0 * (positions - self._goal.trajectory.points[-1].positions) / dt
         else:
             point.velocities = [0, 0, 0, 0, 0, 0, 0]
         # a
         if len(self._goal.trajectory.points) > 2:
-            point.accelerations = 1.0 * (point.velocities - self._goal.trajectory.points[-1].velocities) / time
+            point.accelerations = 1.0 * (point.velocities - self._goal.trajectory.points[-1].velocities) / dt
         else:
             point.accelerations = [0, 0, 0, 0, 0, 0, 0]
         # Code ends
@@ -100,11 +106,17 @@ class Trajectory(object):
         self._goal.goal_time_tolerance = self._goal_time_tolerance
         self._goal.trajectory.joint_names = self._joint_names
 
+    def target_callback(self, msg):
+        self.if_target = True
+        self.target = msg
+
 def main():
     """SDK Joint Trajectory Example: Simple Action Client
+
     Creates a client of the Joint Trajectory Action Server
     to send commands of standard action type,
     control_msgs/FollowJointTrajectoryAction.
+
     Make sure to start the joint_trajectory_action_server.py
     first. Then run this example on a specified limb to
     command a short series of trajectory points for the arm
@@ -129,20 +141,20 @@ def main():
     limb = args.limb
 
     print("Initializing node... ")
-    rospy.init_node("sdk_joint_trajectory_client_{0}".format(limb))
-    print("Getting robot state... ")
+    rospy.init_node("motion_planner".format(limb))
+    #print("Getting robot state... ")
     rs = intera_interface.RobotEnable(CHECK_VERSION)
-    print("Enabling robot... ")
+    #print("Enabling robot... ")
     rs.enable()
     print("Running. Ctrl-c to quit")
 
     limb_interface = intera_interface.Limb(limb)
-    traj = Trajectory(limb, limb_interface.joint_names())
-    rospy.on_shutdown(traj.stop)
+    view_traj = Trajectory(limb, limb_interface.joint_names())
+    rospy.on_shutdown(view_traj.stop)
     # Command Current Joint Positions first
     #limb_interface.move_to_neutral()
     current_angles = [limb_interface.joint_angle(joint) for joint in limb_interface.joint_names()]
-    traj.add_point(current_angles, 0.0)
+    view_traj.add_point(current_angles, 0.0)
     
     # This is the original code
     '''
@@ -166,8 +178,11 @@ def main():
     print("Exiting - Joint Trajectory Action Test Complete")
     '''
 
-    thetalist0 = [0.00722578, -1.13799861, -0.01079448, 1.7510739, 0.00573321, 0.95772104, -0.00563395]
+
     # Here I add some code
+    thetalist0 = [0, -np.pi / 2.0, 0, np.pi / 4, 0, np.pi / 4, 0]
+    point_pub = rospy.Publisher('current_position', Point, queue_size = 1)
+    rospy.Subscriber('target_position', Point, view_traj.target_callback) #16
     Slist = np.array([[0, 0,  1,      0,     0,       0],
                       [0, 1,  0, -0.317,     0,   0.081],
                       [1, 0,  0,      0, 0.317, -0.1925],
@@ -185,24 +200,71 @@ def main():
     y = 0.1603
     eomg = 0.01
     ev = 0.001
-    i = 0
     N = 10
     dt = 2 * np.pi / N
-    r = 0.225
-    p1 = current_angles
+    r = 0.1
+    #p1 = current_angles
     n_sec = 5.0
-    traj.add_point(thetalist0, n_sec)
-    n_sec += 5.0
+    view_traj.add_point(thetalist0, n_sec)
+    print(view_traj)
+    view_traj.start()
+    view_traj.wait(view_traj.duration)
+    overview_point = Point()
+    overview_point.z = 1.0
+    point_pub.publish(overview_point)
+    # Wait for the target_position
+    # These are for test
+    view_traj.if_target = True
+    view_traj.target.x = 0.575
+    view_traj.target.y = 0.1603
+    while view_traj.if_target == False:
+        pass
+    plot_traj = Trajectory(limb, limb_interface.joint_names())
+    rospy.on_shutdown(plot_traj.stop)
+
+
+    current_angles = [limb_interface.joint_angle(joint) for joint in limb_interface.joint_names()]
+    plot_traj.add_point(current_angles, 0.0)
+    T[0][3] = view_traj.target.x
+    T[1][3] = view_traj.target.y
+    T[2][3] = view_traj.target.z + 0.1
+    thetalist0, success = mr.IKinSpace(Slist, M, T, current_angles, eomg, ev)
+    # Not sure if IK succeeds.
+    print(thetalist0)
+    n_sec = 10.0
+    plot_traj.add_point(thetalist0, n_sec)
+    x = view_traj.target.x
+    y = view_traj.target.y
+    T[2][3] = view_traj.target.z
+
+    
+    # Suppose we have a non-continuous trajectory as a list
+    plot_points = []
+    i = 0   
     while i < 2 * N:
+        plot_points.append([x + r * np.cos(i * dt), y + r * np.sin(i * dt)])
+    i = 0
+    while i < 2 * N:
+        plot_points.append([x - r * np.cos(i * dt), y + r * np.sin(i * dt)])    
+    
+    n_sec = 5.0
+    while i < len(plot_points):
         #print(thetalist0)
-        T[0][3] = x + r * np.cos(i * dt)
-        T[1][3] = y + r * np.sin(i * dt)
+        T[0][3] = plot_points[i][0]
+        T[1][3] = plot_points[i][1]
         thetalist0, success = mr.IKinSpace(Slist, M, T, thetalist0, eomg, ev)
-        traj.add_point(thetalist0, n_sec)  
-        n_sec += 0.5      
+        plot_traj.add_point(thetalist0, n_sec)
+        n_sec = 0.5        
         i += 1
-    traj.start()
-    traj.wait(n_sec)    
+    print('1')
+    plot_traj.start()
+    print('2')
+    plot_traj.wait(plot_traj.duration)
+    print('3')  
+    print('4')
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except KeyboardInterrupt:
+        print ("Shutting Down")

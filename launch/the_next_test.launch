@@ -1,0 +1,16 @@
+<launch>
+
+  <!-- Limb Argument -->
+  <arg name="limb" default="right" />
+
+  <!-- Start the Joint Trajectory Action Server -->
+  <node name="sdk_joint_trajectory_action_server" pkg="intera_interface"
+  type="joint_trajectory_action_server.py" args="--limb $(arg limb) --mode position_w_id"
+  required="true" />
+
+  <!-- Run the Joint Trajectory Action Test Example -->
+  <node name="sdk_joint_trajectory_test" pkg="my_nodes"
+  type="the_third_test.py" args="--limb $(arg limb)"
+  output="screen"/>
+
+</launch>
