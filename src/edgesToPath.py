@@ -79,12 +79,29 @@ def getLinesFromPoints(points):
 		return lines
 
 def plotResults(results):
-	lc = mc.LineCollection(getLinesFromPoints(results), linewidths=2)
-	fig, ax = pl.subplots()
-	ax.add_collection(lc)
-	ax.autoscale()
-	ax.margins(0.1)
-	fig.show()
+	plt.ion()
+	plt.axis([0, w_new, 0, h_new])
+	for item in results:
+		if -1 not in item:
+			plt.plot(item[1], h_new - item[0], 'b.')
+    		plt.draw()
+    		plt.pause(0.0001)                   
+   
+	plt.show()
+	# lines = getLinesFromPoints(results[:500])
+	#lc = mc.LineCollection(lines, linewidths=2)
+	# linesSoFar = []
+	# for line in lines:
+	# 	linesSoFar.append(line)
+	# 	lc = mc.LineCollection(linesSoFar, linewidths=2)	
+	# 	fig, ax = pl.subplots()
+	# 	ax.add_collection(lc)
+	# 	ax.autoscale()
+	# 	ax.margins(0.1)
+	# 	fig.show()
+	# 	pl.pause(0.01)
+	# 	pl.close(fig)
+
 	# lines = getLinesFromPoints(results)
 	# for i in range(0, len(results)):
 	# 	((x1,y1),(x2,y2)) = results[i]
@@ -125,8 +142,8 @@ def dfs(mapvals, checked, i, j):
 	resTmp = []
 	checkedTmp = copy.deepcopy(checked)
 	if (i-1 >= 0) and (mapvals[i-1][j] == 1) and ((i-1,j) not in checkedTmp):
-		if resTmp != []:
-			print (i,j), (i-1,j)
+		#if resTmp != []:
+			#print (i,j), (i-1,j)
 		resTmp.append((i-1,j))
 		checkedTmp.add((i-1,j))
 		(innerRes, innerChecked) = dfs(mapvals, checkedTmp, i-1, j)
@@ -135,8 +152,8 @@ def dfs(mapvals, checked, i, j):
 			#resTmp += [(i,j)] + innerRes
 			resTmp += innerRes
 	if ((i-1 >= 0) and (j-1 >= 0)) and (mapvals[i-1][j-1] == 1) and ((i-1,j-1) not in checkedTmp):
-		if resTmp != []:
-			print (i,j), (i-1,j-1)
+		#if resTmp != []:
+			#print (i,j), (i-1,j-1)
 		resTmp.append((i-1,j-1))
 		checkedTmp.add((i-1,j-1))
 		(innerRes, innerChecked) = dfs(mapvals, checkedTmp, i-1, j-1)
@@ -145,8 +162,8 @@ def dfs(mapvals, checked, i, j):
 			#resTmp += [(i,j)] + innerRes
 			resTmp += innerRes
 	if (j-1 >= 0) and (mapvals[i][j-1] == 1) and ((i, j-1) not in checkedTmp):
-		if resTmp != []:
-			print (i,j), (i,j-1)
+		#if resTmp != []:
+			#print (i,j), (i,j-1)
 		resTmp.append((i,j-1))
 		checkedTmp.add((i,j-1))
 		(innerRes, innerChecked) = dfs(mapvals, checkedTmp, i, j-1)
@@ -155,8 +172,8 @@ def dfs(mapvals, checked, i, j):
 			#resTmp += [(i,j)] + innerRes
 			resTmp += innerRes	
 	if (i+1 < len(mapvals)) and (mapvals[i+1][j] == 1) and ((i+1,j) not in checkedTmp):
-		if resTmp != []:
-			print (i,j), (i+1,j)
+		#if resTmp != []:
+			#print (i,j), (i+1,j)
 		resTmp.append((i+1,j))
 		checkedTmp.add((i+1,j))
 		(innerRes, innerChecked) = dfs(mapvals, checkedTmp, i+1, j)
@@ -165,8 +182,8 @@ def dfs(mapvals, checked, i, j):
 			#resTmp += [(i,j)] + innerRes
 			resTmp += innerRes
 	if ((i+1 < len(mapvals)) and (j+1 < len(mapvals[0]))) and (mapvals[i+1][j+1] == 1) and ((i+1,j+1) not in checkedTmp):
-		if resTmp != []:
-			print (i,j), (i+1,j+1)
+		#if resTmp != []:
+			#print (i,j), (i+1,j+1)
 		resTmp.append((i+1,j+1))
 		checkedTmp.add((i+1,j+1))
 		(innerRes, innerChecked) = dfs(mapvals, checkedTmp, i+1, j+1)
@@ -175,8 +192,8 @@ def dfs(mapvals, checked, i, j):
 			#resTmp += [(i,j)] + innerRes
 			resTmp += innerRes
 	if (j+1 < len(mapvals[0])) and (mapvals[i][j+1] == 1) and ((i, j+1) not in checkedTmp):
-		if resTmp != []:
-			print (i,j), (i,j+1)
+		#if resTmp != []:
+			#print (i,j), (i,j+1)
 		resTmp.append((i,j+1))
 		checkedTmp.add((i,j+1))
 		(innerRes, innerChecked) = dfs(mapvals, checkedTmp, i, j+1)
@@ -185,8 +202,8 @@ def dfs(mapvals, checked, i, j):
 			#resTmp += [(i,j)] + innerRes
 			resTmp += innerRes
 	if ((i-1 >= 0) and (j+1 < len(mapvals[0]))) and (mapvals[i-1][j+1] == 1) and ((i-1,j+1) not in checkedTmp):
-		if resTmp != []:
-			print (i,j), (i-1,j+1)
+		#if resTmp != []:
+			#print (i,j), (i-1,j+1)
 		resTmp.append((i-1,j+1))
 		checkedTmp.add((i-1,j+1))
 		(innerRes, innerChecked) = dfs(mapvals, checkedTmp, i-1, j+1)
@@ -195,8 +212,8 @@ def dfs(mapvals, checked, i, j):
 			#resTmp += [(i,j)] + innerRes
 			resTmp += innerRes
 	if ((i+1 < len(mapvals)) and (j-1 >= 0)) and (mapvals[i+1][j-1] == 1) and ((i+1,j-1) not in checkedTmp):
-		if resTmp != []:
-			print (i,j), (i+1,j-1)
+		#if resTmp != []:
+			#print (i,j), (i+1,j-1)
 		resTmp.append((i+1,j-1))
 		checkedTmp.add((i+1,j-1))
 		(innerRes, innerChecked) = dfs(mapvals, checkedTmp, i+1, j-1)
