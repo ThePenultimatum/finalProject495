@@ -15,7 +15,6 @@ class Perception(object):
         self.state = [0, 0, 0, 0]
         self.pointlist = [Point(), Point(), Point(), Point()]
         rospy.Subscriber('/ar_pose_marker', AlvarMarkers, self.callback_ar)
-        rospy.sleep(1)
 
         # Communicate with manipulation node
         rospy.Subscriber('/me495/current-position', Point, self.callback_point)
@@ -32,26 +31,43 @@ class Perception(object):
 
 
     def callback_point(self, point):
-        for i in range(4):
-            if self.state[i] == 1:
+        rospy.sleep(0.1)
+
+        # (-1, 0, 0) for perceiving all four tags
+        if point.x == -1:
+            self.point = [Point(), Point(), Point(), Point()]
+            for i in range(4):
                 x = 0.0
                 y = 0.0
                 z = 0.0
+                n_detect = 0
                 for j in range(10):
-                    x = x + self.pointlist[i].x
-                    y = y + self.pointlist[i].y
-                    z = z + self.pointlist[i].z
-                    rospy.sleep(0.1)
-                self.point = Point()
-                self.point.x = x / 10 + 0.15
-                self.point.y = y / 10
-                self.point.z = z / 10 + 0.2
-            else:
-                self.point = Point()
-                self.point.x = 0
-                self.point.y = 0
-                self.point.z = 0
-            self.point_pub.publish(self.point)
+                    print(self.pointlist)
+                    if self.state[i] == 1:
+                        x = x + self.pointlist[i].x
+                        y = y + self.pointlist[i].y
+                        z = z + self.pointlist[i].z
+                        n_detect = n_detect + 1
+                        rospy.sleep(0.1)
+                        print(n_detect)
+                # Take average
+                if n_detect > 0:
+                    self.point[i].x = x / n_detect + 0.1
+                    self.point[i].y = y / n_detect + 0.05
+                    self.point[i].z = z / n_detect + 0.25
+                else:
+                    self.point[i].x = 0
+                    self.point[i].y = 0
+                    self.point[i].z = 0
+            # Send the tag position to manipulation
+            for i in range(4):
+                self.point_pub.publish(self.point[i])
+
+        # (0, 0, 0) for perceiving each tags
+        if point.x == 0:
+            # print("Recording tag position")
+            print('')
+
 
 
 if __name__ == "__main__":
