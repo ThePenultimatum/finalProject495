@@ -223,6 +223,26 @@ def dfs(mapvals, checked, i, j):
 			resTmp += innerRes			
 	return (resTmp, checkedTmp)
 
+def getRepeatedPoints(pointList):
+	last = None
+	repeatNext = False
+	res = []
+	for i in xrange(len(pointList)):
+		elem = pointList[i]
+		if repeatNext:
+			res.append(elem)
+			repeatNext = False
+			last = elem
+
+		if -1 in elem:
+			repeatNext = True
+			res.append(last)
+		else:
+			res.append(elem)
+			last = elem
+	return res
+
+
 def getPointsFromEdges(edgemap):
 	# This function takes a 2D array of 1's and 0's and returns the a point to point
 	# path along edges separated by (-1, -1) which indicates that the end-effector
@@ -244,8 +264,8 @@ def getPointsFromEdges(edgemap):
 					res.append([(i,j)])
 			else:
 				checked.add((i,j))
-	#return reduce(lambda a,b: a + [(-1,-1)] + b, filter(lambda x: x!=[], map(lambda tree: separateBranches(tree),res)))
-	return filter(lambda x: x!=[], map(lambda tree: separateBranches(tree),res))
+	return reduce(lambda a,b: a + [(-1,-1)] + b, filter(lambda x: x!=[], map(lambda tree: separateBranches(tree),res)))
+	#return filter(lambda x: x!=[], map(lambda tree: separateBranches(tree),res))
 
 def main():
         return 1
