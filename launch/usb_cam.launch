@@ -1,0 +1,27 @@
+<launch>
+
+  <node name="camera_driver" pkg="usb_cam" type="usb_cam_node" args="_video_device:=/dev/video1 _pixel_format:=yuyv" />
+
+  <arg name="marker_size" default="5.5" />
+  <arg name="max_new_marker_error" default="0.1" />
+  <arg name="max_track_error" default="0.1" />
+
+  <arg name="cam_image_topic" default="/camera_driver/image_raw" />
+  <arg name="cam_info_topic" default="/camera_driver/camera_info" />
+  <arg name="output_frame" default="/camera_driver" />
+
+  <node name="ar_track_alvar" pkg="ar_track_alvar" type="individualMarkersNoKinect" respawn="false" output="screen">
+      <param name="marker_size" type="double" value="$(arg marker_size)" />
+      <param name="max_new_marker_error" type="double" value="$(arg max_new_marker_error)" />
+      <param name="max_track_error" type="double" value="$(arg max_track_error)" />
+      <param name="output_frame" type="string" value="$(arg output_frame)" />
+
+      <remap from="camera_image"  to="$(arg cam_image_topic)" />
+      <remap from="camera_info"   to="$(arg cam_info_topic)" />
+  </node>
+
+  <!-- Load .rviz configuration file -->
+  <arg name="rvizconfig" default="$(find me495_vision)/rviz/hand_camera.rviz" />
+  <node pkg="rviz" type="rviz" name="rviz" args="-d $(arg rvizconfig)" required="true" />
+
+</launch>
