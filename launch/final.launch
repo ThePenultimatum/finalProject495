@@ -1,0 +1,7 @@
+<launch>
+  <node name="camera_driver" pkg="usb_cam" type="usb_cam_node" args="_video_device:=/dev/video0 _pixel_format:=yuyv" />
+
+  <node name="img_processor" pkg="final_package" type="img_process.py" output="screen" />
+  <node name="controller" pkg="final_package" type="control.py" output="screen" />
+  <node name="displayer" pkg="final_package" type="display.py" output="screen" />
+</launch>

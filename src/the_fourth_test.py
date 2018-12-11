@@ -200,6 +200,7 @@ def main():
     y = 0.1603
     eomg = 0.01
     ev = 0.001
+    i = 0
     N = 10
     dt = 2 * np.pi / N
     r = 0.1
@@ -217,6 +218,7 @@ def main():
     view_traj.if_target = True
     view_traj.target.x = 0.575
     view_traj.target.y = 0.1603
+    view_traj.target.z = 0.1
     while view_traj.if_target == False:
         pass
     plot_traj = Trajectory(limb, limb_interface.joint_names())
@@ -238,20 +240,11 @@ def main():
     T[2][3] = view_traj.target.z
 
     
-    # Suppose we have a non-continuous trajectory as a list
-    plot_points = []
-    i = 0   
-    while i < 2 * N:
-        plot_points.append([x + r * np.cos(i * dt), y + r * np.sin(i * dt)])
-    i = 0
-    while i < 2 * N:
-        plot_points.append([x - r * np.cos(i * dt), y + r * np.sin(i * dt)])    
-    
     n_sec = 5.0
-    while i < len(plot_points):
+    while i < 2 * N:
         #print(thetalist0)
-        T[0][3] = plot_points[i][0]
-        T[1][3] = plot_points[i][1]
+        T[0][3] = x + r * np.cos(i * dt)
+        T[1][3] = y + r * np.sin(i * dt)
         thetalist0, success = mr.IKinSpace(Slist, M, T, thetalist0, eomg, ev)
         plot_traj.add_point(thetalist0, n_sec)
         n_sec = 0.5        

@@ -218,6 +218,7 @@ def main():
     view_traj.if_target = True
     view_traj.target.x = 0.575
     view_traj.target.y = 0.1603
+    view_traj.target.z = 0.1
     while view_traj.if_target == False:
         pass
     plot_traj = Trajectory(limb, limb_interface.joint_names())
