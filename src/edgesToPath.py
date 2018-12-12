@@ -49,10 +49,6 @@ traj = []
 r, c = edges.shape
 edges = np.array(edges)
 
-
-
-
-
 def getLinesFromPoints(points):
 	n = len(points)
 	if (n == 0):
@@ -123,13 +119,15 @@ def dfs(mapvals, checked, i, j):
 	rightOkay = j+1 < cols
 	leftOkay = j-1 >= 0
 
-	if upOkay and (mapvals[i-1][j] > 0) and ((i-1,j) not in checkedTmp):
-		resTmp.append((i-1,j))
-		checkedTmp.add((i-1,j))
-		(innerRes, innerChecked) = dfs(mapvals, checkedTmp, i-1, j)
-		checkedTmp = checkedTmp.union(innerChecked)
-		if (innerRes != [] and innerChecked != []):
-			resTmp += innerRes
+	
+
+	# if upOkay and (mapvals[i-1][j] > 0) and ((i-1,j) not in checkedTmp):
+	# 	resTmp.append((i-1,j))
+	# 	checkedTmp.add((i-1,j))
+	# 	(innerRes, innerChecked) = dfs(mapvals, checkedTmp, i-1, j)
+	# 	checkedTmp = checkedTmp.union(innerChecked)
+	# 	if (innerRes != [] and innerChecked != []):
+	# 		resTmp += innerRes
 	if leftOkay and upOkay and (mapvals[i-1][j-1] > 0) and ((i-1,j-1) not in checkedTmp):
 		resTmp.append((i-1,j-1))
 		checkedTmp.add((i-1,j-1))
@@ -137,13 +135,13 @@ def dfs(mapvals, checked, i, j):
 		checkedTmp = checkedTmp.union(innerChecked)
 		if (innerRes != [] and innerChecked != []):
 			resTmp += innerRes
-	if leftOkay and (mapvals[i][j-1] > 0) and ((i, j-1) not in checkedTmp):
-		resTmp.append((i,j-1))
-		checkedTmp.add((i,j-1))
-		(innerRes, innerChecked) = dfs(mapvals, checkedTmp, i, j-1)
-		checkedTmp = checkedTmp.union(innerChecked)
-		if (innerRes != [] and innerChecked != []):	
-			resTmp += innerRes	
+	# if leftOkay and (mapvals[i][j-1] > 0) and ((i, j-1) not in checkedTmp):
+	# 	resTmp.append((i,j-1))
+	# 	checkedTmp.add((i,j-1))
+	# 	(innerRes, innerChecked) = dfs(mapvals, checkedTmp, i, j-1)
+	# 	checkedTmp = checkedTmp.union(innerChecked)
+	# 	if (innerRes != [] and innerChecked != []):	
+	# 		resTmp += innerRes	
 	if downOkay and leftOkay and (mapvals[i+1][j-1] > 0) and ((i+1,j-1) not in checkedTmp):
 		resTmp.append((i+1,j-1))
 		checkedTmp.add((i+1,j-1))
@@ -151,13 +149,13 @@ def dfs(mapvals, checked, i, j):
 		checkedTmp = checkedTmp.union(innerChecked)
 		if (innerRes != [] and innerChecked != []):
 			resTmp += innerRes	
-	if downOkay and (mapvals[i+1][j] > 0) and ((i+1,j) not in checkedTmp):
-		resTmp.append((i+1,j))
-		checkedTmp.add((i+1,j))
-		(innerRes, innerChecked) = dfs(mapvals, checkedTmp, i+1, j)
-		checkedTmp = checkedTmp.union(innerChecked)
-		if (innerRes != [] and innerChecked != []):
-			resTmp += innerRes
+	# if downOkay and (mapvals[i+1][j] > 0) and ((i+1,j) not in checkedTmp):
+	# 	resTmp.append((i+1,j))
+	# 	checkedTmp.add((i+1,j))
+	# 	(innerRes, innerChecked) = dfs(mapvals, checkedTmp, i+1, j)
+	# 	checkedTmp = checkedTmp.union(innerChecked)
+	# 	if (innerRes != [] and innerChecked != []):
+	# 		resTmp += innerRes
 	if downOkay and rightOkay and (mapvals[i+1][j+1] > 0) and ((i+1,j+1) not in checkedTmp):
 		resTmp.append((i+1,j+1))
 		checkedTmp.add((i+1,j+1))
@@ -165,13 +163,13 @@ def dfs(mapvals, checked, i, j):
 		checkedTmp = checkedTmp.union(innerChecked)
 		if (innerRes != [] and innerChecked != []):
 			resTmp += innerRes
-	if rightOkay and (mapvals[i][j+1] > 0) and ((i, j+1) not in checkedTmp):
-		resTmp.append((i,j+1))
-		checkedTmp.add((i,j+1))
-		(innerRes, innerChecked) = dfs(mapvals, checkedTmp, i, j+1)
-		checkedTmp = checkedTmp.union(innerChecked)
-		if (innerRes != [] and innerChecked != []):	
-			resTmp += innerRes
+	# if rightOkay and (mapvals[i][j+1] > 0) and ((i, j+1) not in checkedTmp):
+	# 	resTmp.append((i,j+1))
+	# 	checkedTmp.add((i,j+1))
+	# 	(innerRes, innerChecked) = dfs(mapvals, checkedTmp, i, j+1)
+	# 	checkedTmp = checkedTmp.union(innerChecked)
+	# 	if (innerRes != [] and innerChecked != []):	
+	# 		resTmp += innerRes
 	if upOkay and rightOkay and (mapvals[i-1][j+1] > 0) and ((i-1,j+1) not in checkedTmp):
 		resTmp.append((i-1,j+1))
 		checkedTmp.add((i-1,j+1))
@@ -214,8 +212,6 @@ def getNewImageEveryOtherPixel(edgeMap):
 			res.append(newRow)
 	return res
 
-
-
 def getPointsFromEdges(edgeMap):
 	# This function takes a 2D array of 1's and 0's and returns the a point to point
 	# path along edges separated by (-1, -1) which indicates that the end-effector
@@ -241,7 +237,9 @@ def getPointsFromEdges(edgeMap):
 	#return filter(lambda x: x!=[], map(lambda tree: separateBranches(tree),res))
 
 def main():
-        return 1
+	es = getPointsFromEdges(edges)
+	plotResults(es)
+	return 1
 
 if __name__=='__main__':
     try:
