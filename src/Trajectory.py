@@ -55,7 +55,7 @@ class Trajectory(object):
 
         # Here we add velocities and accelerations
         # v
-        if len(self._goal.trajectory.points) > 1:
+        if len(self.+.trajectory.points) > 1:
             point.velocities = 1.0 * (positions - self._goal.trajectory.points[-1].positions) / dt
         else:
             point.velocities = [0, 0, 0, 0, 0, 0, 0]
