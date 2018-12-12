@@ -5,10 +5,11 @@ Created on Tue Dec 11 15:52:46 2018
 
 @author: vnoelifant
 """
-
+# import modules
 import numpy as np
 import cv2 as cv
 
+# create function to detect and crop a face in image
 def face_crop(image):
     
     # load face training data
@@ -40,15 +41,16 @@ def face_crop(image):
         # create cropped faces
         face = img[y-pad_h:y+h+pad_h,x-pad_w:x+w+pad_w]
 
-    # uncropped face
+    # show uncropped face 
     cv.imshow('img',img)
     # show the cropped face
     cv.imshow('face',face)
     # display the window infinitely until any keypress
     cv.waitKey(0)
     cv.destroyAllWindows()
+    #print(type(face))
     return face
 
-
+# main part of script execution
 if __name__ == "__main__":
     face_crop("face.jpg")
