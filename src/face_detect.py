@@ -27,17 +27,21 @@ def face_crop(image):
     faces = face_cascade.detectMultiScale(gray, 1.3, 5)
     
     # add padding to final rectangle to increase its size around face
-    padding = 20
+    # add width padding
+    pad_w = 20
+    # add height padding
+    pad_h = 20
     
     # create rectangle for face
     for f in faces:
         # define vertices of face rectangle
         x,y,w,h = [v for v in f]
-        cv.rectangle(img,(x-padding,y-padding),(x+w+padding,y+h+padding),(255,0,0),2) # blue color
-        # create cropped face
-        face = img[y-padding:y+h+padding,x-padding:x+w+padding]
+        cv.rectangle(img,(x-pad_w,y-pad_h),(x+w+pad_w,y+h+pad_h),(255,0,0),2) # blue color
+        # create cropped faces
+        face = img[y-pad_h:y+h+pad_h,x-pad_w:x+w+pad_w]
 
-     
+    # uncropped face
+    cv.imshow('img',img)
     # show the cropped face
     cv.imshow('face',face)
     # display the window infinitely until any keypress
