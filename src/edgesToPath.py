@@ -13,6 +13,7 @@ import cv2
 from matplotlib import pyplot as plt
 
 img = cv2.imread('lenna.png')
+imgLandscape = cv2.imread('landscape.jpg')
 '''
 edges = cv.Canny(img,100,200)
 plt.subplot(121),plt.imshow(img,cmap = 'gray')
@@ -42,12 +43,23 @@ else:
     h_new = (frame_size * h) / w    
 resizes = cv2.resize(img, (h_new, w_new), cv2.INTER_AREA)
 
+hL, wL = imgLandscape.shape[:2]
+frame_size = 500
+if hL > wL:
+    h_newL = frame_size
+    w_newL = (frame_size * wL) / hL
+else:
+    w_newL = frame_size
+    h_newL = (frame_size * hL) / wL
+resizesL = cv2.resize(imgLandscape, (h_newL, w_newL), cv2.INTER_AREA)
+
 # Canny edge
 edges = cv2.Canny(resizes, 200, 400)
+edgesL = cv2.Canny(resizesL, 200, 400)
 
 traj = []
-r, c = edges.shape
-edges = np.array(edges)
+r, c = edgesL.shape
+edges = np.array(edgesL)
 
 def getLinesFromPoints(points):
 	n = len(points)
@@ -237,8 +249,11 @@ def getPointsFromEdges(edgeMap):
 	#return filter(lambda x: x!=[], map(lambda tree: separateBranches(tree),res))
 
 def main():
-	es = getPointsFromEdges(edges)
-	plotResults(es)
+	#es = getPointsFromEdges(edges)
+	#plotResults(es)
+	esL = getPointsFromEdges(edgesL)
+	plotResults(esL)
+
 	return 1
 
 if __name__=='__main__':
