@@ -200,12 +200,28 @@ def getRepeatedPoints(pointList):
 			last = elem
 	return res
 
+def getNewImageEveryOtherPixel(edgeMap):
+	res = []
+	numRows = len(edgeMap)
+	numCols = len(edgeMap[0])
+	for i in xrange(numRows):
+		if (i % 2 == 0):
+			row = edgeMap[i]
+			newRow = []
+			for j in xrange(numCols):
+				if (j % 2 == 0):
+					newRow.append(row[j])
+			res.append(newRow)
+	return res
 
-def getPointsFromEdges(edgemap):
+
+
+def getPointsFromEdges(edgeMap):
 	# This function takes a 2D array of 1's and 0's and returns the a point to point
 	# path along edges separated by (-1, -1) which indicates that the end-effector
 	# should be lifted in the positive z-direction because the edges are either disconnected
 	# or fragmented into a different part
+	edgemap = getNewImageEveryOtherPixel(edgeMap)
 	checked = set()
 	res = []
 	for i in xrange(len(edgemap)):
