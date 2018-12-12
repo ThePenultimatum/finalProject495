@@ -144,6 +144,13 @@ def dfs(mapvals, checked, i, j):
 		checkedTmp = checkedTmp.union(innerChecked)
 		if (innerRes != [] and innerChecked != []):	
 			resTmp += innerRes	
+	if downOkay and leftOkay and (mapvals[i+1][j-1] > 0) and ((i+1,j-1) not in checkedTmp):
+		resTmp.append((i+1,j-1))
+		checkedTmp.add((i+1,j-1))
+		(innerRes, innerChecked) = dfs(mapvals, checkedTmp, i+1, j-1)
+		checkedTmp = checkedTmp.union(innerChecked)
+		if (innerRes != [] and innerChecked != []):
+			resTmp += innerRes	
 	if downOkay and (mapvals[i+1][j] > 0) and ((i+1,j) not in checkedTmp):
 		resTmp.append((i+1,j))
 		checkedTmp.add((i+1,j))
@@ -171,14 +178,7 @@ def dfs(mapvals, checked, i, j):
 		(innerRes, innerChecked) = dfs(mapvals, checkedTmp, i-1, j+1)
 		checkedTmp = checkedTmp.union(innerChecked)
 		if (innerRes != [] and innerChecked != []):
-			resTmp += innerRes
-	if downOkay and leftOkay and (mapvals[i+1][j-1] > 0) and ((i+1,j-1) not in checkedTmp):
-		resTmp.append((i+1,j-1))
-		checkedTmp.add((i+1,j-1))
-		(innerRes, innerChecked) = dfs(mapvals, checkedTmp, i+1, j-1)
-		checkedTmp = checkedTmp.union(innerChecked)
-		if (innerRes != [] and innerChecked != []):
-			resTmp += innerRes			
+			resTmp += innerRes		
 	return (resTmp, checkedTmp)
 
 def getRepeatedPoints(pointList):
