@@ -30,7 +30,7 @@ while i < 340:
 def resize_edge(image_in):
     img = image_in
     h, w = img.shape[:2]
-    frame_size = 100
+    frame_size = 40
     if h > w:
         h_new = frame_size
         w_new = (frame_size * w) / h

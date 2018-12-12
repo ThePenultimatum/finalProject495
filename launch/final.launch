@@ -1,0 +1,50 @@
+<launch>
+
+
+    <!-- Launch the USB camera -->
+    <!-- <node name="camera_driver" pkg="usb_cam" type="usb_cam_node" args="_video_device:=/dev/video1 _pixel_format:=yuyv" /> -->
+
+
+    <!-- Load AR_tag package and launch the robot hand camera -->
+    <arg name="marker_size" default="5.5" />
+    <arg name="max_new_marker_error" default="0.1" />
+    <arg name="max_track_error" default="0.1" />
+
+    <arg name="cam_image_topic" default="/io/internal_camera/right_hand_camera/image_raw" />
+    <arg name="cam_info_topic" default="/io/internal_camera/right_hand_camera/camera_info" />
+    <arg name="output_frame" default="/base" />
+
+    <node name="ar_track_alvar" pkg="ar_track_alvar" type="individualMarkersNoKinect" respawn="false" output="screen">
+        <param name="marker_size" type="double" value="$(arg marker_size)" />
+        <param name="max_new_marker_error" type="double" value="$(arg max_new_marker_error)" />
+        <param name="max_track_error" type="double" value="$(arg max_track_error)" />
+        <param name="output_frame" type="string" value="$(arg output_frame)" />
+
+        <remap from="camera_image"  to="$(arg cam_image_topic)" />
+        <remap from="camera_info"   to="$(arg cam_info_topic)" />
+    </node>
+
+
+    <!-- Limb Argument -->
+    <arg name="limb" default="right" />
+    <!-- Start the Joint Trajectory Action Server -->
+    <node name="sdk_joint_trajectory_action_server" pkg="intera_interface" type="joint_trajectory_action_server.py" args="--limb $(arg limb) --mode position_w_id" required="true" />
+
+
+    <!-- Load rviz with .rviz configuration file -->
+    <arg name="rvizconfig" default="$(find me495_vision)/rviz/hand_camera.rviz" />
+    <node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rvizconfig)" required="true" />
+
+
+    <!-- Load the Python nodes -->
+    <node name="control" pkg="me495_vision" type="control.py" output="screen"/>
+
+    <node name="facial_recognition" pkg="me495_vision" type="facial_recognition.py" output="screen"/>
+
+    <node name="manipulation" pkg="me495_vision" type="manipulation.py" output="screen" />
+
+    <node name="perception" pkg="me495_vision" type="perception.py" output="screen" />
+
+    <node name="drawing" pkg="me495_vision" type="drawing.py" args="--limb $(arg limb)" output="screen" />
+
+</launch>

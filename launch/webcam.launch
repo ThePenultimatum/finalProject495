@@ -1,7 +1,0 @@
-<launch>
-
-  <node name="camera_driver" pkg="usb_cam" type="usb_cam_node" args="_video_device:=/dev/video0 _pixel_format:=yuyv" />
-
-  <!-- <node name="webcam_calibration" pkg="me495_vision" type="webcam_calibration.py" output="screen"/> -->
-
-</launch>
