@@ -33,15 +33,15 @@ while i < 340:
 '''
 
 # Resize
-h, w = img.shape[:2]
-frame_size = 100
-if h > w:
-    h_new = frame_size
-    w_new = (frame_size * w) / h
-else:
-    w_new = frame_size
-    h_new = (frame_size * h) / w    
-resizes = cv2.resize(img, (h_new, w_new), cv2.INTER_AREA)
+# h, w = img.shape[:2]
+# frame_size = 100
+# if h > w:
+#     h_new = frame_size
+#     w_new = (frame_size * w) / h
+# else:
+#     w_new = frame_size
+#     h_new = (frame_size * h) / w    
+# resizes = cv2.resize(img, (h_new, w_new), cv2.INTER_AREA)
 
 hL, wL = imgLandscape.shape[:2]
 frame_size = 500
@@ -54,7 +54,7 @@ else:
 resizesL = cv2.resize(imgLandscape, (h_newL, w_newL), cv2.INTER_AREA)
 
 # Canny edge
-edges = cv2.Canny(resizes, 200, 400)
+# edges = cv2.Canny(resizes, 200, 400)
 edgesL = cv2.Canny(resizesL, 200, 400)
 
 traj = []
@@ -86,10 +86,10 @@ def getLinesFromPoints(points):
 
 def plotResults(results):
 	plt.ion()
-	plt.axis([0, w_new, 0, h_new])
+	plt.axis([0, w_newL, 0, h_newL])
 	for item in results:
 		if -1 not in item:
-			plt.plot(item[1], h_new - item[0], 'b.')
+			plt.plot(item[1], h_newL - item[0], 'b.')
     		plt.draw()
     		plt.pause(0.0001)                   
    
