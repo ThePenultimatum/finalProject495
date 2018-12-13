@@ -179,10 +179,10 @@ class DrawingControl(object):
         Slist, M, eomg, ev = self.get_parameters_for_IK()
         n_sec = 0.5
         n_sec_for_hang=5
-        z_touch=-0.01
-        z_hang=0.05
-        x_cutoff=-0.25
-        y_cutoff=-0.15
+        z_touch=0.160
+        z_hang=0.210
+        x_cutoff=-0.20
+        y_cutoff=-0.17
         T = np.array([[0, -1, 0, 0.575],
                       [-1, 0, 0, 0.1603],
                       [0, 0, -1, 0.317],
@@ -206,19 +206,24 @@ class DrawingControl(object):
         plot_points =self.trajectory
 
         print("Solving IK")
+        thetalist0 = [-0.66, -0.91, 0.04, 2.21, -0.11, 0.28, -0.45]
         while i < len(plot_points):
             if marker_hanup==True:
                 #move right above the start point
-                T[0][3] = plot_points[i][0]*0.01 + self.target.x + x_cutoff
-                T[1][3] = plot_points[i][1]*0.01 + self.target.y + y_cutoff
+                T[0][3] = plot_points[i][0]*0.005 + self.target.x + x_cutoff
+                T[1][3] = plot_points[i][1]*0.005 + self.target.y + y_cutoff
                 thetalist0, success = mr.IKinSpace(Slist, M, T, thetalist0, eomg, ev)
+                # print("Bad IK Solution point: ", T[0][3], T[1][3], T[2][3], i,plot_points[i][0], plot_points[i][1])
+                # print("Joint angles: ", thetalist0)
                 self.IK_validation(thetalist0)
                 if i==0:
                     print("fisrt angles",thetalist0)
                 line_traj.add_point(thetalist0, n_sec_for_hang)
                 #drop down marker
-                T[2][3] = z_touch
+                T[2][3] = self.target.z + z_touch
                 thetalist0, success = mr.IKinSpace(Slist, M, T, thetalist0, eomg, ev)
+                # print("Bad IK Solution point: ", T[0][3], T[1][3], T[2][3], i,plot_points[i][0], plot_points[i][1])
+                # print("Joint angles: ", thetalist0)
                 self.IK_validation(thetalist0)
                 line_traj.add_point(thetalist0, n_sec_for_hang)
 
@@ -227,15 +232,19 @@ class DrawingControl(object):
             else:
                 if plot_points[i][0]==-1 and plot_points[i][1]==-1:
                     # lift up the marker
-                    T[2][3] = z_hang
+                    T[2][3] = self.target.z + z_hang
                     thetalist0, success = mr.IKinSpace(Slist, M, T, thetalist0, eomg, ev)
+                    # print("Bad IK Solution point: ", T[0][3], T[1][3], T[2][3], i,plot_points[i][0], plot_points[i][1])
+                    # print("Joint angles: ", thetalist0)
                     self.IK_validation(thetalist0)
                     line_traj.add_point(thetalist0, n_sec_for_hang)
                     marker_hanup=True
                 else:
-                    T[0][3] = plot_points[i][0]*0.01 +self.target.x +x_cutoff
-                    T[1][3] = plot_points[i][1]*0.01 +self.target.y +y_cutoff
+                    T[0][3] = plot_points[i][0]*0.005 +self.target.x +x_cutoff
+                    T[1][3] = plot_points[i][1]*0.005 +self.target.y +y_cutoff
                     thetalist0, success = mr.IKinSpace(Slist, M, T, thetalist0, eomg, ev)
+                    # print("Bad IK Solution point: ", T[0][3], T[1][3], T[2][3], i,plot_points[i][0], plot_points[i][1])
+                    # print("Joint angles: ", thetalist0)
                     self.IK_validation(thetalist0)
                     line_traj.add_point(thetalist0, n_sec)
                 i+=1
@@ -244,6 +253,7 @@ class DrawingControl(object):
         #start to draw
         line_traj.start()
         line_traj.wait(line_traj.duration)
+        print("Finish Drawing !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
 
 
     def IK_validation(self, thetalist):
@@ -251,8 +261,8 @@ class DrawingControl(object):
         for i in range(len(thetalist)):
             if abs(thetalist[i]) > np.pi:
                 print("Bad IK solution!!!!!! Stop the robot.")
-                break
-                rospy.sleep(10000)
+                rospy.signal_shutdown("Invalid IK solution")
+                # pass
 
 
 

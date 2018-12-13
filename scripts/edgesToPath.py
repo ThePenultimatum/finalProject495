@@ -1,32 +1,17 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*
 import copy
 import modern_robotics
 import rospy
 import numpy as np
+import matplotlib.pyplot as plt
 import pylab as pl
 from matplotlib import collections  as mc
+
 import cv2
 from matplotlib import pyplot as plt
 
-# img = cv2.imread('lenna.png')
-'''
-edges = cv.Canny(img,100,200)
-plt.subplot(121),plt.imshow(img,cmap = 'gray')
-plt.title('Original Image'), plt.xticks([]), plt.yticks([])
-plt.subplot(122),plt.imshow(edges,cmap = 'gray')
-plt.title('Edge Image'), plt.xticks([]), plt.yticks([])
-plt.show()
-'''
-'''
-i = 331
-limit = 400
-while i < 340:
-    edges = cv.Canny(img, 20, limit)
-    plt.subplot(i),plt.imshow(edges,cmap = 'gray')
-    i = i + 1
-    limit = limit + 50
-'''
+
 def resize_edge(image_in):
     img = image_in
     h, w = img.shape[:2]
@@ -242,30 +227,22 @@ def getPointsFromEdges(edgemap):
 	# path along edges separated by (-1, -1) which indicates that the end-effector
 	# should be lifted in the positive z-direction because the edges are either disconnected
 	# or fragmented into a different part
-	checked = set()
-	res = []
-	for i in xrange(len(edgemap)):
-		for j in xrange(len(edgemap[i])):
-			if ((i,j) not in checked) and (edgemap[i][j] > 0):
-				checked.add((i,j))
-				#res += [(i,j)]
-				(resTmp, checkedTmp) = dfs(edgemap, checked, i, j)
-				# add default value to say pick up end-effector
-				checked = checked.union(checkedTmp)
-				if (resTmp != []):
-					res.append([(i,j)] + resTmp)
-				else:
-					res.append([(i,j)])
-			else:
-				checked.add((i,j))
-	return reduce(lambda a,b: a + [(-1,-1)] + b, filter(lambda x: x!=[], map(lambda tree: separateBranches(tree),res)))
+    checked = set()
+    res = []
+    for i in xrange(len(edgemap)):
+        for j in xrange(len(edgemap[i])):
+            if ((i,j) not in checked) and (edgemap[i][j] > 0):
+                checked.add((i,j))
+                #res += [(i,j)]
+                (resTmp, checkedTmp) = dfs(edgemap, checked, i, j)
+                # add default value to say pick up end-effector
+                checked = checked.union(checkedTmp)
+                if (resTmp != []):
+                    res.append([(i,j)] + resTmp)
+                else:
+                    res.append([(i,j)])
+            else:
+                checked.add((i,j))
+    res = filter(lambda branch: len(branch) > 1, res)
+    return reduce(lambda a,b: a + [(-1,-1)] + b, filter(lambda x: x!=[], map(lambda tree: separateBranches(tree),res)))
 	#return filter(lambda x: x!=[], map(lambda tree: separateBranches(tree),res))
-
-# def main():
-#         return 1
-#
-# if __name__=='__main__':
-#     try:
-#         main()
-#     except KeyboardInterrupt:
-#         print ("Shutting Down")

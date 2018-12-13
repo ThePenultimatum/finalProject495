@@ -2,8 +2,7 @@
 
 
     <!-- Launch the USB camera -->
-    <!-- <node name="camera_driver" pkg="usb_cam" type="usb_cam_node" args="_video_device:=/dev/video1 _pixel_format:=yuyv" /> -->
-
+    <node name="camera_driver" pkg="usb_cam" type="usb_cam_node" args="_video_device:=/dev/video1 _pixel_format:=yuyv" />
 
     <!-- Load AR_tag package and launch the robot hand camera -->
     <arg name="marker_size" default="5.5" />
@@ -38,6 +37,8 @@
 
     <!-- Load the Python nodes -->
     <node name="control" pkg="me495_vision" type="control.py" output="screen"/>
+
+    <node name="display" pkg="me495_vision" type="display.py" output="screen"/>
 
     <node name="facial_recognition" pkg="me495_vision" type="facial_recognition.py" output="screen"/>
 

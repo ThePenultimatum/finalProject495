@@ -50,6 +50,10 @@ class PositionControl(object):
         self.eomg = 0.01
         self.ev = 0.001
 
+        # Turn head for taking photo
+        head = intera_interface.Head()
+        head.set_pan(angle=-np.pi, speed=0.3, timeout=10, active_cancellation=True)
+
 
     def callback_command(self, string):
         if string.data == "Localize Board":
@@ -81,10 +85,14 @@ class PositionControl(object):
 
 
     def first_move(self):
+        # Turn head for showing the edge drawing
+        head = intera_interface.Head()
+        head.set_pan(angle=0.0, speed=0.3, timeout=10, active_cancellation=True)
+
         # First observe all the AR_tags
         # Target point
         self.point = Point()
-        self.point.x = 0.800
+        self.point.x = 0.700
         self.point.y = 0.1603
         self.point.z = 0.650
         # This is the initial configuration of right_hand_camera in base frame
@@ -102,6 +110,7 @@ class PositionControl(object):
     def move_to_high(self, thetalist0):
         # Solve IK
         self.thetalist, success = mr.IKinSpace(self.Slist, self.M, self.T, thetalist0, self.eomg, self.ev)
+        self.IK_validation(self.thetalist)
 
         # Nove to the initial position
         self.waypoints['right_j0'] = self.thetalist[0]
@@ -123,6 +132,7 @@ class PositionControl(object):
     def move_to_each(self, thetalist0):
         # Solve IK
         self.thetalist, success = mr.IKinSpace(self.Slist, self.M, self.T, thetalist0, self.eomg, self.ev)
+        self.IK_validation(self.thetalist)
 
         # Nove to the initial position
         self.waypoints['right_j0'] = self.thetalist[0]
@@ -146,6 +156,14 @@ class PositionControl(object):
     def finish(self):
         self.command.x = 1
         self.point_pub.publish(self.command)
+
+
+    def IK_validation(self, thetalist):
+        # Stop the drawing if the IK solution is not valid
+        for i in range(len(thetalist)):
+            if abs(thetalist[i]) > np.pi:
+                print("Bad IK solution!!!!!! Stop the robot.")
+                rospy.signal_shutdown("Invalid IK solution")
 
 
 

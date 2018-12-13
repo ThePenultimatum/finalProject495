@@ -23,7 +23,22 @@ class ProcessControl(object):
 
         self.drawing = False
 
-        self.command_pub.publish("Take Photo")
+        # Main pipeline of the program
+        self.state_camera = "n"
+        while self.state_camera == "n":
+            self.state_camera = raw_input("Show Camera Flow? [y/n]")
+            if self.state_camera == "y":
+                self.command_pub.publish("Show Camera")
+
+        self.state_photo = "n"
+        while self.state_photo == "n":
+            self.state_photo = raw_input("Ready to take a photo? [y/n] \n")
+            if self.state_photo == "y":
+                self.command_pub.publish("Take Photo")
+                self.state_photo = raw_input("Ready to use this photo? [y/n] \n")
+
+
+        self.command_pub.publish("Start Processing")
         self.command_pub.publish("Localize Board")
 
         while not rospy.is_shutdown():
