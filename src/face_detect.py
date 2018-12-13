@@ -9,6 +9,7 @@ Created on Tue Dec 11 15:52:46 2018
 import numpy as np
 import cv2 as cv
 
+
 # create function to detect and crop a face in image
 def face_crop(image):
     
@@ -40,6 +41,12 @@ def face_crop(image):
         cv.rectangle(img,(x-pad_w,y-pad_h),(x+w+pad_w,y+h+pad_h),(255,0,0),2) # blue color
         # create cropped faces
         face = img[y-pad_h:y+h+pad_h,x-pad_w:x+w+pad_w]
+        
+        # remove rectangle by further cropping
+        face = face[5:100, 5:100]
+
+       
+
 
     # show uncropped face 
     cv.imshow('img',img)
