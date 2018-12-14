@@ -43,7 +43,7 @@ def face_crop(image):
         face = img[y-pad_h:y+h+pad_h,x-pad_w:x+w+pad_w]
         
         # remove rectangle by further cropping
-        face = face[5:100, 5:100]
+        # face = face[5:100, 5:100]
 
        
 
