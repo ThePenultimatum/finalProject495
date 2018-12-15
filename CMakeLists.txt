@@ -1,5 +1,9 @@
 cmake_minimum_required(VERSION 2.8.3)
+<<<<<<< HEAD
 project(drawing_with_sawyer)
+=======
+project(me495_vision)
+>>>>>>> 7d81c4e580a3b3f17882ed99c8dcbc254ce5d7dc
 
 ## Compile as C++11, supported in ROS Kinetic and newer
 # add_compile_options(-std=c++11)
@@ -8,9 +12,15 @@ project(drawing_with_sawyer)
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
+<<<<<<< HEAD
   controller_manager
   joint_state_controller
   robot_state_publisher
+=======
+  roscpp
+  rospy
+  std_msgs
+>>>>>>> 7d81c4e580a3b3f17882ed99c8dcbc254ce5d7dc
 )
 
 ## System dependencies are found with CMake's conventions
@@ -70,7 +80,11 @@ find_package(catkin REQUIRED COMPONENTS
 ## Generate added messages and services with any dependencies listed here
 # generate_messages(
 #   DEPENDENCIES
+<<<<<<< HEAD
 #   std_msgs  # Or other packages containing msgs
+=======
+#   std_msgs
+>>>>>>> 7d81c4e580a3b3f17882ed99c8dcbc254ce5d7dc
 # )
 
 ################################################
@@ -104,8 +118,13 @@ find_package(catkin REQUIRED COMPONENTS
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
 #  INCLUDE_DIRS include
+<<<<<<< HEAD
 #  LIBRARIES drawing_with_sawyer
 #  CATKIN_DEPENDS controller_manager joint_state_controller robot_state_publisher
+=======
+#  LIBRARIES me495_vision
+#  CATKIN_DEPENDS roscpp rospy std_msgs
+>>>>>>> 7d81c4e580a3b3f17882ed99c8dcbc254ce5d7dc
 #  DEPENDS system_lib
 )
 
@@ -122,7 +141,11 @@ include_directories(
 
 ## Declare a C++ library
 # add_library(${PROJECT_NAME}
+<<<<<<< HEAD
 #   src/${PROJECT_NAME}/drawing_with_sawyer.cpp
+=======
+#   src/${PROJECT_NAME}/me495_vision.cpp
+>>>>>>> 7d81c4e580a3b3f17882ed99c8dcbc254ce5d7dc
 # )
 
 ## Add cmake target dependencies of the library
@@ -133,7 +156,11 @@ include_directories(
 ## Declare a C++ executable
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
+<<<<<<< HEAD
 # add_executable(${PROJECT_NAME}_node src/drawing_with_sawyer_node.cpp)
+=======
+# add_executable(${PROJECT_NAME}_node src/me495_vision_node.cpp)
+>>>>>>> 7d81c4e580a3b3f17882ed99c8dcbc254ce5d7dc
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -190,7 +217,11 @@ include_directories(
 #############
 
 ## Add gtest based cpp test target and link libraries
+<<<<<<< HEAD
 # catkin_add_gtest(${PROJECT_NAME}-test test/test_drawing_with_sawyer.cpp)
+=======
+# catkin_add_gtest(${PROJECT_NAME}-test test/test_me495_vision.cpp)
+>>>>>>> 7d81c4e580a3b3f17882ed99c8dcbc254ce5d7dc
 # if(TARGET ${PROJECT_NAME}-test)
 #   target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME})
 # endif()
