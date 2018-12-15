@@ -12,7 +12,7 @@ class PositionControl(object):
 
     def __init__(self):
         # Initialize ROS node
-        rospy.init_node("position_control", anonymous=True)
+        rospy.init_node("manipulation", anonymous=True)
         self.point_pub = rospy.Publisher("/me495/current_position", Point, queue_size = 10)
 
         # Communicate with perception node

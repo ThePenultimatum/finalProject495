@@ -26,7 +26,7 @@ import rospkg
 class Display(object):
 
     def __init__(self):
-        rospy.init_node("displayer", anonymous=True)
+        rospy.init_node("head_display", anonymous=True)
         self.head_display = intera_interface.HeadDisplay()
 
         # Load in camera image to show in display

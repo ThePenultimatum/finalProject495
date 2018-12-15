@@ -100,7 +100,7 @@ class DrawingControl(object):
         # limb = args.limb
         limb = "right"
 
-        rospy.init_node("motion_planner".format(limb))
+        rospy.init_node("drawing".format(limb))
         #print("Getting robot state... ")
         rs = intera_interface.RobotEnable(CHECK_VERSION)
         #print("Enabling robot... ")

@@ -11,7 +11,7 @@ class ProcessControl(object):
 
     def __init__(self):
 
-        rospy.init_node("process_control", anonymous=True)
+        rospy.init_node("program_control", anonymous=True)
 
         # Topics to conmmand and hear back from the other nodes
         self.command_pub = rospy.Publisher("/me495/command", String, queue_size = 10)

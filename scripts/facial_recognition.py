@@ -59,12 +59,6 @@ class FacialRecognition(object):
                     print("CV Bridge fails")
                     self.state_face = False
 
-                # print(self.face)
-                # face_resize = self.resize(self.face, 600)
-                # face_ros = self.bridge.cv2_to_imgmsg(face_resize, encoding="passthrough")
-                # self.image_pub.publish(face_ros)
-                # print("Sending face to display")
-
 
         if string.data == "Start Processing":
             # self.photo_retake()
@@ -74,24 +68,25 @@ class FacialRecognition(object):
     def image_process(self):
         print("Processing Image")
 
-        # Apply Canny Edge Detector
+        # Resize the photo and apply Canny Edge Detector
         # Generate edgemap and send to display
-        cv2.imwrite("/home/ethan/Pictures/face.jpg", self.face)
         edges = self.resize_edge(self.face, 80)
+        # Save locally
+        cv2.imwrite("/home/ethan/Pictures/face.jpg", self.face)
         cv2.imwrite("/home/ethan/Pictures/edge.jpg", edges)
-        # cv2.imshow("ss", edges)
-        # cv2.waitKey(0)
-        # cv2.destroyAllWindows()
 
+        # Resize the edgemap image
         edges_resize = self.resize(edges, 600)
         edges_rgb = cv2.cvtColor(edges_resize, cv2.COLOR_GRAY2RGB)
-        # Add Jarvis
+        # Add Jarvis as background
         self.jarvis[0:edges_rgb.shape[0], 0:edges_rgb.shape[1]] = edges_rgb
         edges_ros = self.bridge.cv2_to_imgmsg(self.jarvis, encoding="passthrough")
         self.image_pub.publish(edges_ros)
         print("Sending edges to display")
 
+        # Apply DFS to transfer binary image to trajectory points
         pathlist = getPointsFromEdges(edges)
+        # (-1,-1) to lift up the end effector
         pathlist.append((-1,-1))
         print("Path length: ", len(pathlist))
 

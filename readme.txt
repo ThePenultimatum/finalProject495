@@ -1,3 +1,24 @@
+# Face Painter
+-----------------------------------------------------------------------------------------
+#### ME-495 Final Project, Fall 2018, Northwestern University
+#### Group members:Mark Dyehouse, Veronica Medrano, Huan Weng, Chenge Yang, Guo Ye
+-----------------------------------------------------------------------------------------
+## Introduction
+
+### Objective
+### Perception
+### Trajectory Planning
+### Robot Control
+-----------------------------------------------------------------------------------------
+## Implementation
+
+### Launch file
+### [Nodes][scripts]
+* 
+### Topics
+### Messages
+### External Packages
+
 # Connect to Sawyer
 cd sawyer_ws/
 ./intera.sh

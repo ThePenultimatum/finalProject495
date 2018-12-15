@@ -4,7 +4,7 @@
     <!-- Launch the USB camera -->
     <node name="camera_driver" pkg="usb_cam" type="usb_cam_node" args="_video_device:=/dev/video1 _pixel_format:=yuyv" />
 
-    <!-- Load AR_tag package and launch the robot hand camera -->
+    <!-- Load AR_tag package with the robot hand camera -->
     <arg name="marker_size" default="5.5" />
     <arg name="max_new_marker_error" default="0.1" />
     <arg name="max_track_error" default="0.1" />
@@ -24,7 +24,7 @@
     </node>
 
 
-    <!-- Limb Argument -->
+    <!-- Limb Argument for Sawyer -->
     <arg name="limb" default="right" />
     <!-- Start the Joint Trajectory Action Server -->
     <node name="sdk_joint_trajectory_action_server" pkg="intera_interface" type="joint_trajectory_action_server.py" args="--limb $(arg limb) --mode position_w_id" required="true" />
@@ -35,17 +35,22 @@
     <node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rvizconfig)" required="true" />
 
 
-    <!-- Load the Python nodes -->
+    <!-- Program flow control node -->
     <node name="control" pkg="me495_vision" type="control.py" output="screen"/>
 
+    <!-- Sawyer head display node -->
     <node name="display" pkg="me495_vision" type="display.py" output="screen"/>
 
+    <!-- Camera control, facial recognition and image processing node -->
     <node name="facial_recognition" pkg="me495_vision" type="facial_recognition.py" output="screen"/>
 
+    <!-- Robot arm control node when localizing the drawing board -->
     <node name="manipulation" pkg="me495_vision" type="manipulation.py" output="screen" />
 
+    <!-- Perceive AR tags and generate target location when localizing the drawing board -->
     <node name="perception" pkg="me495_vision" type="perception.py" output="screen" />
 
+    <!-- Robot arm conrol using JTAS for drawing  -->
     <node name="drawing" pkg="me495_vision" type="drawing.py" args="--limb $(arg limb)" output="screen" />
 
 </launch>
