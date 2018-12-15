@@ -42,7 +42,7 @@ This goal of this project is to take a photo of a person and draw his face with 
 * 
 
 ### Noes
-* [control.py][./scripts/control.py]: Launch
+* [control.py](./scripts/control.py): Launch
 
 ### Topics
 * 
