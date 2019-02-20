@@ -16,7 +16,7 @@ def face_crop(image):
     # load face training data
     face_cascade = cv.CascadeClassifier('haarcascade_frontalface_default.xml')
     
-    #read in image
+    #read in the image
     img = cv.imread(image)
     
     #resize image if needed
@@ -52,7 +52,6 @@ def face_crop(image):
     # display the window infinitely until any keypress
     cv.waitKey(0)
     cv.destroyAllWindows()
-    #print(type(face))
     return face
 
 # main part of script execution
