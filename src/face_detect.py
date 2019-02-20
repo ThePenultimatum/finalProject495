@@ -17,7 +17,7 @@ def face_crop(image):
     face_cascade = cv.CascadeClassifier('haarcascade_frontalface_default.xml')
     
     #read in image
-    img = cv.imread('face.jpg')
+    img = cv.imread(image)
     
     #resize image if needed
     #cv.resize(img,(320,240))
@@ -44,9 +44,6 @@ def face_crop(image):
         
         # remove rectangle by further cropping
         # face = face[5:100, 5:100]
-
-       
-
 
     # show uncropped face 
     cv.imshow('img',img)
